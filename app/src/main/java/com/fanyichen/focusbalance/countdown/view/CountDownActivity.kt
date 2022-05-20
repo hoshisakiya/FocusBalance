@@ -1,6 +1,5 @@
-package com.fanyichen.focusbalance.view
+package com.fanyichen.focusbalance.countdown.view
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,13 +7,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.fanyichen.focusbalance.R
+import com.fanyichen.focusbalance.countdown.viewmodel.CountDownViewModel
 import com.fanyichen.focusbalance.databinding.ActivityCountDownBinding
 import com.fanyichen.focusbalance.mdc_ui.util.getSurface1
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class CountDownActivity : AppCompatActivity() {
+    private val viewModel: CountDownViewModel = CountDownViewModel(this)
     private lateinit var binding: ActivityCountDownBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayoutCompat>
     private lateinit var todoListAdapter: TodoListAdapter
@@ -44,6 +46,16 @@ class CountDownActivity : AppCompatActivity() {
             true
         }
         binding.addTodo.setOnClickListener { showAddTodoDialog() }
+    }
+
+    private fun setUpObservation() {
+        viewModel.viewState.observe(this, Observer { state ->
+            when (state) {
+                is CountDownViewModel.ViewState.CountingDown -> {
+
+                }
+            }
+        })
     }
 
     private fun showAddTodoDialog() {

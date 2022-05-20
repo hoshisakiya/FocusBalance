@@ -14,7 +14,7 @@
         android:theme="@style/Theme.FocusBalance"
         tools:targetApi="31">
         <activity
-            android:name=".view.CountDownActivity"
+            android:name=".countdown.view.CountDownActivity"
             android:theme="@style/Theme.FocusBalance.TransparentStatusBar"
             android:exported="true">
             <intent-filter>
