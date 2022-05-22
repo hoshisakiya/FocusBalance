@@ -1,4 +1,4 @@
-package com.fanyichen.focusbalance.LocalDataManager.dao.bean
+package com.fanyichen.focusbalance.data_manager.bean
 
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey

@@ -14,6 +14,7 @@ import com.fanyichen.focusbalance.countdown.viewmodel.CountDownViewModel
 import com.fanyichen.focusbalance.databinding.ActivityCountDownBinding
 import com.fanyichen.focusbalance.mdc_ui.util.getSurface1
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlin.math.min
 
 class CountDownActivity : AppCompatActivity() {
     private val viewModel: CountDownViewModel = CountDownViewModel(this)
@@ -27,6 +28,7 @@ class CountDownActivity : AppCompatActivity() {
         setContentView(binding.root)
         initStyle()
         initView()
+        setUpObservation()
     }
 
     private fun initStyle() {
@@ -49,13 +51,69 @@ class CountDownActivity : AppCompatActivity() {
     }
 
     private fun setUpObservation() {
-        viewModel.viewState.observe(this, Observer { state ->
+        viewModel.state.observe(this) { state ->
             when (state) {
+                is CountDownViewModel.ViewState.PrepareCounting -> {
+                    switchToCountDownFragment(
+                        state = CountdownFragment.State.PREPARING,
+                        minute = state.countdown.totalMinute.toString(),
+                        second = "0",
+                        onStart = { viewModel.countDown() },
+                        onStop = { viewModel.stopCountDown() }
+                    )
+                }
                 is CountDownViewModel.ViewState.CountingDown -> {
+                    setCountDownFragment(
+                        state = CountdownFragment.State.COUNTING_DOWN,
+                        minute = state.countdown.minute.toString(),
+                        second = state.countdown.second.toString()
+                    )
+                    binding.addTodo.visibility = View.GONE
+                }
+                is CountDownViewModel.ViewState.CountingComplete -> {
 
                 }
+                else -> {}
             }
-        })
+        }
+    }
+
+    private fun switchToCountDownFragment(
+        state: CountdownFragment.State,
+        minute: String,
+        second: String,
+        onStart: () -> Unit,
+        onStop: () -> Unit
+    ) {
+        var fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (fragment !is CountdownFragment) {
+            fragment = CountdownFragment()
+            val bundle = Bundle()
+            bundle.putInt(CountdownFragment.STATE, state.value)
+            bundle.putString(CountdownFragment.MINUTE, minute)
+            bundle.putString(CountdownFragment.SECOND, second)
+            fragment.onStart = onStart
+            fragment.onStop = onStop
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit()
+        } else {
+            setCountDownFragment(state, minute, second)
+            supportFragmentManager.beginTransaction()
+                .show(fragment)
+        }
+    }
+
+    private fun setCountDownFragment(
+        state: CountdownFragment.State,
+        minute: String,
+        second: String,
+    ) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (fragment is CountdownFragment) {
+            fragment.state = state
+            fragment.setTime(minute, second)
+        }
     }
 
     private fun showAddTodoDialog() {

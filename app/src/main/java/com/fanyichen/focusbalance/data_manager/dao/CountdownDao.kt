@@ -1,7 +1,7 @@
-package com.fanyichen.focusbalance.LocalDataManager.dao
+package com.fanyichen.focusbalance.data_manager.dao
 
 import android.text.TextUtils
-import com.fanyichen.focusbalance.LocalDataManager.dao.bean.CountDownBean
+import com.fanyichen.focusbalance.data_manager.bean.CountDownBean
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.query

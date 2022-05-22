@@ -1,4 +1,4 @@
-package com.fanyichen.focusbalance.countdown.view
+package com.fanyichen.focusbalance.countdown.view.dialog
 
 import android.content.Context
 import android.os.Bundle
